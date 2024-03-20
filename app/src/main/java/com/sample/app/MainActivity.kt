@@ -19,6 +19,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -43,16 +44,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        val result = sharedFlowProducer()
+        val result = mutableStateFlows()
 
         scope.launch {
-            result.collect{
-                Log.d("sample", "collected $it")
-            }
-        }
-
-        scope.launch {
-            delay(3000)
+            delay(12000)
             result.collect{
                 Log.d("sample", "collected $it")
             }
@@ -81,7 +76,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun mutableStateFlows(): Flow<Int> {
-        val mutable = MutableSharedFlow<Int>()
+        val mutable = MutableStateFlow<Int>(10)
         scope.launch {
             listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9).forEach {
                 mutable.emit(it)
